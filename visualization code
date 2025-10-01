@@ -1,0 +1,52 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+months = ['07/2019', '08/2019', '09/2019', '10/2019', '11/2019']
+searches = [50, 53, 59, 55, 62]      # blue bars
+direct =   [39, 47, 42, 51, 51]      # red bars
+social =   [70, 80, 90, 87, 92]      # orange bars
+
+df = pd.DataFrame({
+    'month': months,
+    'Searches': searches,
+    'Direct': direct,
+    'Social Media': social
+})
+
+n_groups = len(df)
+bar_width = 0.22
+index = np.arange(n_groups)
+
+plt.figure(figsize=(11,6.2))
+
+b1 = plt.bar(index - bar_width, df['Searches'], bar_width, label='Searches')
+b2 = plt.bar(index, df['Direct'], bar_width, label='Direct')
+b3 = plt.bar(index + bar_width, df['Social Media'], bar_width, label='Social Media')
+
+
+def autolabel(bars, fmt='{:.0f}'):
+    for bar in bars:
+        h = bar.get_height()
+        plt.text(bar.get_x() + bar.get_width()/2.0, h + 2, fmt.format(h), ha='center', va='bottom', fontsize=9)
+
+autolabel(b1)
+autolabel(b2)
+autolabel(b3)
+
+plt.xticks(index, df['month'])
+plt.xlabel('months')
+plt.ylabel('visitors\nin thousands', labelpad=10)
+plt.title('Visitors by web traffic sources', pad=12)
+plt.ylim(0, 105)
+plt.legend(loc='lower center', bbox_to_anchor=(0.5, -0.15), ncol=3)
+
+plt.gca().spines['top'].set_visible(False)
+plt.gca().spines['right'].set_visible(False)
+plt.gca().yaxis.grid(True, linestyle='--', linewidth=0.5, alpha=0.6)
+
+plt.tight_layout()
+plt.savefig('visitors_by_source.png', dpi=150, bbox_inches='tight')
+plt.show()
+
+print("Saved file: visitors_by_source.png")
